@@ -34,25 +34,10 @@ import org.slf4j.LoggerFactory
  * @author Andres Almiray
  */
 @Singleton
-final class OraclekvConnector {
+final class OraclekvConnector implements OraclekvProvider {
     private bootstrap
 
     private static final Logger LOG = LoggerFactory.getLogger(OraclekvConnector)
-
-    static void enhance(MetaClass mc) {
-        mc.withOraclekv = {Closure closure ->
-            OraclekvStoreHolder.instance.withOraclekv('default', closure)
-        }
-        mc.withOraclekv << {String storeName, Closure closure ->
-            OraclekvStoreHolder.instance.withOraclekv(storeName, closure)
-        }
-        mc.withOraclekv << {CallableWithArgs callable ->
-            OraclekvStoreHolder.instance.withOraclekv('default', callable)
-        }
-        mc.withOraclekv << {String storeName, CallableWithArgs callable ->
-            OraclekvStoreHolder.instance.withOraclekv(storeName, callable)
-        }
-    }
 
     Object withOraclekv(String storeName = 'default', Closure closure) {
         OraclekvStoreHolder.instance.withOraclekv(storeName, closure)

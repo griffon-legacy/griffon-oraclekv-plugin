@@ -62,7 +62,7 @@ Upon installation the plugin will generate the following artifacts in `$appdir/g
 
 A new dynamic method named `withOraclekv` will be injected into all controllers,
 giving you access to an `oraclekv.store.KVStore` object, with which you'll be able
-to make calls to the store. Remember to make all calls to the store off the EDT
+to make calls to the store. Remember to make all store calls off the EDT
 otherwise your application may appear unresponsive when doing long computations
 inside the EDT.
 This method is aware of multiple stores. If no storeName is specified when calling
@@ -119,6 +119,43 @@ default store block is used.
 ### Example
 
 A trivial sample application can be found at [https://github.com/aalmiray/griffon_sample_apps/tree/master/persistence/oraclekv][2]
+
+Testing
+-------
+The `withOraclekv()` dynamic method will not be automatically injected during unit testing, because addons are simply not initialized
+for this kind of tests. However you can use `OraclekvEnhancer.enhance(metaClassInstance, oraclekvProviderInstance)` where 
+`oraclekvProviderInstance` is of type `griffon.plugins.oraclekv.OraclekvProvider`. The contract for this interface looks like this
+
+    public interface OraclekvProvider {
+        Object withOraclekv(Closure closure);
+        Object withOraclekv(String storeName, Closure closure);
+        <T> T withOraclekv(CallableWithArgs<T> callable);
+        <T> T withOraclekv(String storeName, CallableWithArgs<T> callable);
+    }
+
+It's up to you define how these methods need to be implemented for your tests. For example, here's an implementation that never
+fails regardless of the arguments it receives
+
+    class MyOraclekvProvider implements OraclekvProvider {
+        Object withOraclekv(String storeName = 'default', Closure closure) {
+            // empty
+        }
+
+        public <T> T withOraclekv(String storeName = 'default', CallableWithArgs<T> callable) {
+            // empty
+        }       
+    }
+    
+This implementation may be used in the following way
+
+    class MyServiceTests extends GriffonUnitTestCase {
+        void testSmokeAndMirrors() {
+            MyService service = new MyService()
+            OraclekvEnhancer.enhance(service.metaClass, new MyOraclekvProvider())
+            // exercise service methods
+        }
+    }
+
 
 [1]: http://www.oracle.com/technetwork/database/nosqldb/overview/index.html
 [2]: https://github.com/aalmiray/griffon_sample_apps/tree/master/persistence/oraclekv

@@ -18,6 +18,7 @@
 
 import griffon.core.GriffonApplication
 import griffon.plugins.oraclekv.OraclekvConnector
+import griffon.plugins.oraclekv.OraclekvEnhancer
 
 /**
  * @author Andres Almiray
@@ -37,7 +38,7 @@ class OraclekvGriffonAddon {
             def types = app.config.griffon?.oraclekv?.injectInto ?: ['controller']
             if(!types.contains(type)) return
             def mc = app.artifactManager.findGriffonClass(klass).metaClass
-            OraclekvConnector.enhance(mc)
+            OraclekvEnhancer.enhance(mc)
         }
     ]
 }

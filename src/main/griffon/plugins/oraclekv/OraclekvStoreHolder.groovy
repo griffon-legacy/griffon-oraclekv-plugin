@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory
  * @author Andres Almiray
  */
 @Singleton
-class OraclekvStoreHolder {
+class OraclekvStoreHolder implements OraclekvProvider {
     private static final Logger LOG = LoggerFactory.getLogger(OraclekvStoreHolder)
     private static final Object[] LOCK = new Object[0]
     private final Map<String, KVStore> stores = [:]
