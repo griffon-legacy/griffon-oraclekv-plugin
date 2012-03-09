@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import griffon.core.GriffonClass
 import griffon.core.GriffonApplication
 import griffon.plugins.oraclekv.OraclekvConnector
 import griffon.plugins.oraclekv.OraclekvEnhancer
@@ -29,16 +30,20 @@ class OraclekvGriffonAddon {
         OraclekvConnector.instance.connect(app, config)
     }
 
+    void addonPostInit(GriffonApplication app) {
+        def types = app.config.griffon?.oraclekv?.injectInto ?: ['controller']
+        for(String type : types) {
+            for(GriffonClass gc : app.artifactManager.getClassesOfType(type)) {
+                OraclekvEnhancer.enhance(gc.metaClass)
+            }
+        }
+    }
+
     def events = [
         ShutdownStart: { app ->
             ConfigObject config = OraclekvConnector.instance.createConfig(app)
             OraclekvConnector.instance.disconnect(app, config)
-        },
-        NewInstance: { klass, type, instance ->
-            def types = app.config.griffon?.oraclekv?.injectInto ?: ['controller']
-            if(!types.contains(type)) return
-            def mc = app.artifactManager.findGriffonClass(klass).metaClass
-            OraclekvEnhancer.enhance(mc)
         }
     ]
 }
+

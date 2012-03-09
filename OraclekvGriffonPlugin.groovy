@@ -23,7 +23,7 @@ class OraclekvGriffonPlugin {
     // the plugin version
     String version = '0.1'
     // the version or versions of Griffon the plugin is designed for
-    String griffonVersion = '0.9.5-SNAPSHOT > *'
+    String griffonVersion = '0.9.5 > *'
     // the other plugins this plugin depends on
     Map dependsOn = [:]
     // resources that are included in plugin packaging
@@ -80,7 +80,7 @@ been configured as 'internal'
 	
 This method is also accessible to any component through the singleton `griffon.plugins.oraclekv.OraclekvConnector`.
 You can inject these methods to non-artifacts via metaclasses. Simply grab hold of a particular metaclass and call
-`OraclekvConnector.enhance(metaClassInstance)`.
+`OraclekvEnhancer.enhance(metaClassInstance, oraclekvProviderInstance)`.
 
 Configuration
 -------------
@@ -137,13 +137,8 @@ It's up to you define how these methods need to be implemented for your tests. F
 fails regardless of the arguments it receives
 
     class MyOraclekvProvider implements OraclekvProvider {
-        Object withOraclekv(String storeName = 'default', Closure closure) {
-            // empty
-        }
-
-        public <T> T withOraclekv(String storeName = 'default', CallableWithArgs<T> callable) {
-            // empty
-        }       
+        Object withOraclekv(String storeName = 'default', Closure closure) { null }
+        public <T> T withOraclekv(String storeName = 'default', CallableWithArgs<T> callable) { null }       
     }
     
 This implementation may be used in the following way

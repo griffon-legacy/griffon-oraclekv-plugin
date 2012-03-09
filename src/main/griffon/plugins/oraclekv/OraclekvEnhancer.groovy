@@ -19,14 +19,19 @@
 package griffon.plugins.oraclekv
 
 import griffon.util.CallableWithArgs
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * @author Andres Almiray
  */
 final class OraclekvEnhancer {
+    private static final Logger LOG = LoggerFactory.getLogger(OraclekvEnhancer)
+
     private OraclekvEnhancer() {}
     
     static void enhance(MetaClass mc, OraclekvProvider provider = OraclekvStoreHolder.instance) {
+        if(LOG.debugEnabled) LOG.debug("Enhancing $mc with $provider")
         mc.withOraclekv = {Closure closure ->
             provider.withOraclekv('default', closure)
         }
