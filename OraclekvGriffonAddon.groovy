@@ -39,7 +39,7 @@ class OraclekvGriffonAddon {
         }
     }
 
-    def events = [
+    Map events = [
         ShutdownStart: { app ->
             ConfigObject config = OraclekvConnector.instance.createConfig(app)
             OraclekvConnector.instance.disconnect(app, config)

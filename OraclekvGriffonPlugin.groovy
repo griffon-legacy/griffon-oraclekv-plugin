@@ -21,9 +21,9 @@
  */
 class OraclekvGriffonPlugin {
     // the plugin version
-    String version = '0.1'
+    String version = '0.2'
     // the version or versions of Griffon the plugin is designed for
-    String griffonVersion = '0.9.5 > *'
+    String griffonVersion = '1.1.0 > *'
     // the other plugins this plugin depends on
     Map dependsOn = [:]
     // resources that are included in plugin packaging
@@ -65,19 +65,20 @@ giving you access to an `oraclekv.store.KVStore` object, with which you'll be ab
 to make calls to the store. Remember to make all store calls off the EDT
 otherwise your application may appear unresponsive when doing long computations
 inside the EDT.
+
 This method is aware of multiple stores. If no storeName is specified when calling
 it then the default store will be selected. Here are two example usages, the first
 queries against the default store while the second queries a store whose name has
 been configured as 'internal'
 
-	package sample
-	class SampleController {
-	    def queryAllDataSources = {
-	        withOraclekv { storeName, store -> ... }
-	        withOraclekv('internal') { storeName, store -> ... }
-	    }
-	}
-	
+    package sample
+    class SampleController {
+        def queryAllDataSources = {
+            withOraclekv { storeName, store -> ... }
+            withOraclekv('internal') { storeName, store -> ... }
+        }
+    }
+
 This method is also accessible to any component through the singleton `griffon.plugins.oraclekv.OraclekvConnector`.
 You can inject these methods to non-artifacts via metaclasses. Simply grab hold of a particular metaclass and call
 `OraclekvEnhancer.enhance(metaClassInstance, oraclekvProviderInstance)`.
@@ -107,11 +108,11 @@ implies this is the store used by default, however you can configure named store
 by adding a new config block. For example connecting to a store whose name is 'internal'
 can be done in this way
 
-	stores {
-	    internal {
-		    host = 'server.acme.com'
-		}
-	}
+    stores {
+        internal {
+            host = 'server.acme.com'
+        }
+    }
 
 This block can be used inside the `environments()` block in the same way as the
 default store block is used.
@@ -138,9 +139,9 @@ fails regardless of the arguments it receives
 
     class MyOraclekvProvider implements OraclekvProvider {
         Object withOraclekv(String storeName = 'default', Closure closure) { null }
-        public <T> T withOraclekv(String storeName = 'default', CallableWithArgs<T> callable) { null }       
+        public <T> T withOraclekv(String storeName = 'default', CallableWithArgs<T> callable) { null }
     }
-    
+
 This implementation may be used in the following way
 
     class MyServiceTests extends GriffonUnitTestCase {
@@ -152,7 +153,7 @@ This implementation may be used in the following way
     }
 
 
-[1]: http://www.oracle.com/technetwork/database/nosqldb/overview/index.html
+[1]: http://www.oracle.com/technetwork/products/nosqldb/overview/index.html
 [2]: https://github.com/aalmiray/griffon_sample_apps/tree/master/persistence/oraclekv
 '''
 }

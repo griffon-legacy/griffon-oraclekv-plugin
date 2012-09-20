@@ -26,6 +26,7 @@ import griffon.core.GriffonApplication
 import griffon.util.Environment
 import griffon.util.Metadata
 import griffon.util.CallableWithArgs
+import griffon.util.ConfigUtils
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -50,8 +51,7 @@ final class OraclekvConnector implements OraclekvProvider {
     // ======================================================
 
     ConfigObject createConfig(GriffonApplication app) {
-        def storeClass = app.class.classLoader.loadClass('OraclekvConfig')
-        new ConfigSlurper(Environment.current.name).parse(storeClass)
+        ConfigUtils.loadConfigWithI18n('OraclekvConfig')
     }
 
     private ConfigObject narrowConfig(ConfigObject config, String storeName) {
@@ -90,7 +90,7 @@ final class OraclekvConnector implements OraclekvProvider {
         String store = storeName == 'default'? config.name : storeName
         String host  = config.host ?: 'localhost'
         def port     = config.port ?: 5000
-        
+
         KVStoreFactory.getStore(new KVStoreConfig(store, host + ":" + port))
     }
 

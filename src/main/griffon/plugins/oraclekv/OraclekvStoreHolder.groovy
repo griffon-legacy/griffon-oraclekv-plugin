@@ -36,7 +36,7 @@ class OraclekvStoreHolder implements OraclekvProvider {
     private static final Logger LOG = LoggerFactory.getLogger(OraclekvStoreHolder)
     private static final Object[] LOCK = new Object[0]
     private final Map<String, KVStore> stores = [:]
-  
+
     String[] getStoreNames() {
         List<String> storeNames = new ArrayList().addAll(stores.keySet())
         storeNames.toArray(new String[storeNames.size()])
@@ -49,7 +49,7 @@ class OraclekvStoreHolder implements OraclekvProvider {
 
     void setStore(String storeName = 'default', KVStore store) {
         if(isBlank(storeName)) storeName = 'default'
-        storeStore(storeName, store)       
+        storeStore(storeName, store)
     }
 
     Object withOraclekv(String storeName = 'default', Closure closure) {
@@ -72,7 +72,7 @@ class OraclekvStoreHolder implements OraclekvProvider {
     
     void disconnectStore(String storeName) {
         if(isBlank(storeName)) storeName = 'default'
-        storeStore(storeName, null)        
+        storeStore(storeName, null)
     }
 
     private KVStore fetchStore(String storeName) {
@@ -83,7 +83,7 @@ class OraclekvStoreHolder implements OraclekvProvider {
             ConfigObject config = OraclekvConnector.instance.createConfig(app)
             store = OraclekvConnector.instance.connect(app, config, storeName)
         }
-        
+
         if(store == null) {
             throw new IllegalArgumentException("No such KVStore configuration for name $storeName")
         }

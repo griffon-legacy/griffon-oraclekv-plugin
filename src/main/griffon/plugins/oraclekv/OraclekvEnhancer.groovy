@@ -29,7 +29,7 @@ final class OraclekvEnhancer {
     private static final Logger LOG = LoggerFactory.getLogger(OraclekvEnhancer)
 
     private OraclekvEnhancer() {}
-    
+
     static void enhance(MetaClass mc, OraclekvProvider provider = OraclekvStoreHolder.instance) {
         if(LOG.debugEnabled) LOG.debug("Enhancing $mc with $provider")
         mc.withOraclekv = {Closure closure ->
